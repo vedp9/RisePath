@@ -4,7 +4,7 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/risepath.html"
+      "destination": "/index.html"
     },
     {
       "source": "/admin",
