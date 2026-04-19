@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RisePath — Mentorship for your journey</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;max-width:480px;margin:0 auto;}
+  .phone{width:100%;background:#fff;min-height:100vh;}
+  .sbar{display:none;}
+  .sbar-t{display:none;}
+  .sbar-i{display:none;}
+  .screen{display:none;}
+  .screen.active{display:block;}
+  .screen-anim{opacity:0;transform:translateY(18px);filter:blur(8px);}
+  .screen-anim.motion-in{animation:screenReveal 0.62s cubic-bezier(.22,1,.36,1) forwards;animation-delay:var(--motion-delay,0s);}
+  @keyframes screenReveal{
+    from{opacity:0;transform:translateY(18px);filter:blur(8px);}
+    to{opacity:1;transform:none;filter:none;}
+  }
+
+  /* TYPOGRAPHY */
+  .htag{font-size:11px;font-weight:600;letter-spacing:0.05em;display:inline-block;padding:3px 11px;border-radius:20px;margin-bottom:10px;}
+  .htag-p{background:#EEEDFE;color:#534AB7;}
+  .htag-c{background:#FAECE7;color:#993C1D;}
+  .htag-t{background:#E1F5EE;color:#0F6E56;}
+  .htitle{font-size:20px;font-weight:700;color:#111;line-height:1.3;}
+  .hsub{font-size:13px;color:#666;margin-top:6px;line-height:1.6;}
+  .hero{padding:22px 22px 14px;}
+  .bp{padding:0 22px 24px;}
+  .sec-label{font-size:11px;font-weight:600;color:#aaa;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:10px;}
+
+  /* PROGRESS */
+  .ptrack{height:3px;background:#eee;margin:0 22px;}
+  .pfill{height:3px;background:#7F77DD;border-radius:2px;transition:width 0.35s;}
+  .slabel{font-size:11px;color:#bbb;padding:5px 22px 0;text-align:right;}
+
+  /* BUTTONS */
+  .cta{width:100%;padding:14px;border-radius:14px;background:#7F77DD;color:#fff;font-size:15px;font-weight:600;border:none;cursor:pointer;margin-top:8px;transition:background 0.15s;}
+  .cta:active{background:#534AB7;}
+  .cta-dim{width:100%;padding:14px;border-radius:14px;background:#ccc;color:#fff;font-size:15px;font-weight:600;border:none;cursor:not-allowed;margin-top:8px;}
+  .cta-green{background:#1D9E75;}
+  .cta-green:active{background:#0F6E56;}
+  .sec-btn{width:100%;padding:12px;border-radius:14px;border:1.5px solid #e0e0e0;background:transparent;color:#555;font-size:14px;cursor:pointer;margin-top:8px;}
+  .back-row{display:flex;align-items:center;gap:6px;padding:12px 22px 0;cursor:pointer;}
+  .bch{font-size:17px;color:#aaa;}
+  .blbl{font-size:14px;color:#7F77DD;font-weight:500;}
+
+  /* CARDS */
+  .card{background:#fff;border:1.5px solid #eee;border-radius:16px;padding:16px 18px;margin-bottom:10px;}
+  .info-box{background:#E6F1FB;border-radius:12px;padding:12px 14px;margin-top:10px;}
+  .info-text{font-size:12px;color:#185FA5;line-height:1.6;}
+  .surface{background:#f7f6f3;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+
+  /* OPTIONS / CHIPS */
+  .opt{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:1.5px solid #e8e8e8;border-radius:14px;margin-bottom:10px;cursor:pointer;transition:all 0.15s;background:#fff;}
+  .opt.sel{border-color:#7F77DD;background:#EEEDFE;}
+  .opt.sel .oicon{background:#7F77DD;color:#fff;}
+  .opt.sel .otitle{color:#26215C;}
+  .opt.sel .osub{color:#534AB7;}
+  .oicon{width:36px;height:36px;border-radius:10px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:15px;color:#aaa;flex-shrink:0;transition:all 0.15s;font-weight:600;}
+  .otitle{font-size:14px;font-weight:600;color:#111;}
+  .osub{font-size:12px;color:#777;margin-top:3px;line-height:1.5;}
+
+  .chip-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+  .chip{padding:8px 16px;border-radius:20px;font-size:13px;border:1.5px solid #e0e0e0;cursor:pointer;color:#777;background:#fff;transition:all 0.15s;}
+  .chip.sel{background:#EEEDFE;color:#534AB7;border-color:#AFA9EC;}
+  .chip-teal.sel{background:#E1F5EE;color:#0F6E56;border-color:#5DCAA5;}
+
+  /* FIELD */
+  .field-label{font-size:13px;font-weight:600;color:#555;margin-bottom:5px;margin-top:16px;}
+  .field-input{width:100%;padding:12px 14px;border:1.5px solid #e0e0e0;border-radius:12px;font-size:14px;background:#fff;color:#111;outline:none;}
+  .field-input:focus{border-color:#7F77DD;}
+  .textarea{width:100%;padding:12px 14px;border:1.5px solid #e0e0e0;border-radius:12px;font-size:13px;background:#fff;color:#111;outline:none;resize:none;line-height:1.6;}
+  .textarea:focus{border-color:#7F77DD;}
+
+  /* AVATAR */
+  .avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;}
+  .av-p{background:#EEEDFE;color:#534AB7;}
+  .av-t{background:#E1F5EE;color:#0F6E56;}
+  .av-c{background:#FAECE7;color:#993C1D;}
+  .av-b{background:#E6F1FB;color:#185FA5;}
+
+  /* BADGE */
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+  .bp{background:#EEEDFE;color:#534AB7;}
+  .bt{background:#E1F5EE;color:#0F6E56;}
+  .bc{background:#FAECE7;color:#993C1D;}
+  .bb{background:#E6F1FB;color:#185FA5;}
+
+  /* NAV BAR */
+  .nav-bar{display:flex;border-top:1.5px solid #f0f0f0;background:#fff;}
+  .nav-btn{flex:1;padding:10px 0 10px;font-size:11px;color:#bbb;text-align:center;cursor:pointer;border:none;background:transparent;font-weight:500;}
+  .nav-btn.active{color:#7F77DD;font-weight:700;}
+  .nav-dot{width:4px;height:4px;border-radius:50%;background:#7F77DD;margin:3px auto 0;}
+
+  /* DOT ROW */
+  .dot-row{display:flex;gap:7px;justify-content:center;padding:12px 0 0;}
+  .dot{width:7px;height:7px;border-radius:50%;background:#e0e0e0;}
+  .dot.active{background:#7F77DD;}
+
+  /* MENTOR CARD */
+  .mentor-card{background:#fff;border:1.5px solid #eee;border-radius:16px;padding:16px 18px;margin-bottom:12px;}
+  .mentor-name{font-size:15px;font-weight:700;color:#111;}
+  .mentor-title{font-size:12px;color:#888;margin-top:2px;margin-bottom:8px;}
+  .mentor-bio{font-size:13px;color:#666;line-height:1.6;margin-top:6px;}
+  .mentor-actions{display:flex;gap:8px;margin-top:12px;}
+  .mbtn{flex:1;padding:9px;border-radius:10px;font-size:13px;font-weight:600;border:1.5px solid #e0e0e0;background:transparent;color:#555;cursor:pointer;}
+  .mbtn-p{background:#7F77DD;color:#fff;border-color:#7F77DD;}
+
+  /* CHAT */
+  .msg{max-width:78%;display:flex;flex-direction:column;gap:3px;}
+  .msg.me{align-self:flex-end;align-items:flex-end;}
+  .msg.them{align-self:flex-start;}
+  .bubble{padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.5;}
+  .bubble-me{background:#7F77DD;color:#fff;border-bottom-right-radius:4px;}
+  .bubble-them{background:#f3f3f3;color:#111;border-bottom-left-radius:4px;}
+  .msg-time{font-size:10px;color:#bbb;padding:0 4px;}
+
+  /* MOOD TAGS */
+  .mood-tag{padding:9px 16px;border-radius:20px;font-size:13px;border:1.5px solid #e0e0e0;cursor:pointer;color:#777;transition:all 0.15s;}
+  .mood-tag.sel{background:#EEEDFE;color:#534AB7;border-color:#AFA9EC;}
+
+  /* STEP ROW */
+  .step-row{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+  .step-num{width:30px;height:30px;border-radius:50%;background:#EEEDFE;color:#534AB7;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .step-num-t{background:#E1F5EE;color:#0F6E56;}
+  .step-title{font-size:14px;font-weight:600;color:#111;}
+  .step-desc{font-size:12px;color:#777;margin-top:3px;line-height:1.5;}
+
+  /* PROGRESS BAR */
+  .prog-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .prog-label{font-size:12px;color:#888;width:110px;flex-shrink:0;}
+  .prog-bg{flex:1;height:7px;background:#eee;border-radius:4px;overflow:hidden;}
+  .prog-fill{height:100%;border-radius:4px;}
+  .prog-pct{font-size:11px;color:#888;width:32px;text-align:right;flex-shrink:0;}
+
+  /* RESOURCE */
+  .res-card{background:#fff;border:1.5px solid #eee;border-radius:12px;padding:13px 16px;margin-bottom:9px;display:flex;gap:13px;align-items:center;}
+  .res-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+
+  /* SESSION */
+  .session-card{background:#fff;border:1.5px solid #eee;border-radius:12px;padding:13px 16px;margin-bottom:9px;display:flex;align-items:center;gap:13px;}
+  .sess-time{font-size:11px;color:#aaa;min-width:85px;}
+
+  /* STAT */
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+  .stat-card{background:#f7f6f3;border-radius:12px;padding:14px;}
+  .stat-val{font-size:24px;font-weight:700;color:#111;}
+  .stat-lbl{font-size:11px;color:#aaa;margin-top:3px;}
+
+  /* REVIEW CARD */
+  .rv-row{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid #f0f0f0;}
+  .rv-row:last-child{border-bottom:none;}
+  .rv-label{font-size:12px;color:#aaa;}
+  .rv-val{font-size:12px;font-weight:600;color:#111;text-align:right;max-width:190px;}
+
+  /* TABS */
+  .tab-row{display:flex;border-bottom:1.5px solid #f0f0f0;padding:0 22px;}
+  .tab{padding:10px 14px;font-size:13px;color:#aaa;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1.5px;font-weight:500;}
+  .tab.active{color:#7F77DD;border-bottom-color:#7F77DD;font-weight:700;}
+
+  /* MATCH */
+  .match-av{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin:0 auto 10px;}
+  .match-quote{font-size:13px;color:#666;line-height:1.6;font-style:italic;margin-top:12px;padding-top:12px;border-top:1px solid #eee;}
+  .why-box{background:#f7f6f3;border-radius:12px;padding:13px 16px;margin-bottom:10px;}
+
+  /* SUCCESS */
+  .success-circle{width:72px;height:72px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px;color:#0F6E56;font-weight:700;}
+
+  /* WELCOME SCREEN HERO BAND */
+  .hero-band{padding:28px 22px 20px;}
+
+  /* SCROLL FIX */
+  .scrollable{max-height:calc(100vh - 200px);overflow-y:auto;}
+
+  /* SEND BTN */
+  .send-btn{width:36px;height:36px;border-radius:50%;background:#7F77DD;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;}
+
+  /* ONLINE DOT */
+  .online{width:9px;height:9px;border-radius:50%;background:#1D9E75;margin-left:auto;}
+
+  /* AVAIL CHIP */
+  .avail-row{display:flex;gap:8px;margin-top:6px;}
+  .avail-chip{flex:1;padding:10px 0;border-radius:10px;font-size:12px;border:1.5px solid #e0e0e0;cursor:pointer;color:#888;text-align:center;background:#fff;font-weight:500;}
+  .avail-chip.sel{background:#E1F5EE;color:#0F6E56;border-color:#5DCAA5;}
+
+  /* avatar upload */
+  .av-upload{width:76px;height:76px;border-radius:50%;background:#EEEDFE;border:2px dashed #AFA9EC;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;margin:0 auto 16px;}
+  .av-init{font-size:24px;font-weight:700;color:#534AB7;}
+  .av-sub{font-size:10px;color:#7F77DD;margin-top:2px;}
+
+  /* LANDING EXPERIENCE */
+  #page-landing{height:100vh;overflow:hidden;background:#F5EFE5;}
+  .landing-shell{position:relative;height:100%;}
+  .landing-flow{height:100%;overflow-y:auto;scroll-snap-type:y mandatory;scroll-behavior:smooth;background:linear-gradient(180deg,#F6EEE3 0%,#F5F0FF 48%,#EAF6EF 100%);-ms-overflow-style:none;scrollbar-width:none;}
+  .landing-flow::-webkit-scrollbar{display:none;}
+  .landing-topbar{position:absolute;top:0;left:0;right:0;z-index:6;display:flex;align-items:center;justify-content:space-between;padding:18px 18px 0;pointer-events:none;}
+  .landing-topbar > *{pointer-events:auto;}
+  .landing-top-actions{display:flex;align-items:center;gap:8px;}
+  .landing-brand{font-size:18px;font-weight:800;color:#534AB7;letter-spacing:-0.5px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,0.76);backdrop-filter:blur(14px);box-shadow:0 10px 30px rgba(83,74,183,0.09);}
+  .landing-pill-btn{border:none;background:rgba(255,255,255,0.82);color:#534AB7;padding:10px 14px;border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;backdrop-filter:blur(14px);box-shadow:0 10px 30px rgba(83,74,183,0.09);}
+  .landing-pill-btn.alt{color:#0F6E56;}
+  .landing-dots{position:absolute;right:14px;top:50%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;gap:8px;}
+  .landing-dot{width:8px;height:24px;border:none;border-radius:999px;background:rgba(83,74,183,0.18);cursor:pointer;transition:all 0.25s ease;box-shadow:none;}
+  .landing-dot.active{height:40px;background:#7F77DD;box-shadow:0 12px 28px rgba(83,74,183,0.28);}
+  .landing-panel{position:relative;min-height:100%;padding:92px 22px 30px;display:flex;align-items:center;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;}
+  .landing-panel-inner{position:relative;z-index:1;display:flex;flex-direction:column;gap:18px;width:100%;}
+  .landing-panel-hero{background:
+      radial-gradient(circle at 82% 18%, rgba(127,119,221,0.22), transparent 28%),
+      radial-gradient(circle at 12% 84%, rgba(29,158,117,0.18), transparent 26%),
+      linear-gradient(180deg,#F7EFE4 0%,#F4EDFF 100%);}
+  .landing-panel-students{background:
+      radial-gradient(circle at 88% 16%, rgba(153,60,29,0.12), transparent 22%),
+      radial-gradient(circle at 8% 80%, rgba(127,119,221,0.14), transparent 26%),
+      linear-gradient(180deg,#FFF7F3 0%,#F3EEFF 100%);}
+  .landing-panel-mentor{background:
+      radial-gradient(circle at 82% 14%, rgba(29,158,117,0.20), transparent 24%),
+      radial-gradient(circle at 10% 84%, rgba(24,95,165,0.16), transparent 24%),
+      linear-gradient(180deg,#F3FBF6 0%,#EDF7FF 100%);}
+  .landing-glow{position:absolute;border-radius:999px;filter:blur(2px);pointer-events:none;}
+  .landing-glow-a{width:180px;height:180px;top:-30px;right:-40px;background:rgba(127,119,221,0.18);}
+  .landing-glow-b{width:150px;height:150px;bottom:18px;left:-44px;background:rgba(29,158,117,0.12);}
+  .landing-kicker{font-size:11px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:#7C7399;}
+  .landing-title{font-size:34px;font-weight:800;line-height:1.02;letter-spacing:-0.04em;color:#111;}
+  .landing-sub{font-size:14px;color:#5E5A68;line-height:1.7;max-width:320px;}
+  .landing-anim{opacity:0;transform:translateY(26px) scale(0.98);transition:opacity 0.72s cubic-bezier(.22,1,.36,1),transform 0.72s cubic-bezier(.22,1,.36,1);transition-delay:var(--delay,0s);}
+  .landing-panel.revealed .landing-anim{opacity:1;transform:none;}
+  .landing-audience-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .landing-audience-card{border:none;border-radius:22px;padding:18px 16px 16px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:8px;box-shadow:0 18px 44px rgba(17,17,17,0.08);}
+  .landing-card-student{background:linear-gradient(180deg,#ECE8FF 0%,#DED8FF 100%);}
+  .landing-card-mentor{background:linear-gradient(180deg,#E5F8EF 0%,#D5F1E4 100%);}
+  .landing-card-icon{font-size:26px;}
+  .landing-card-tag{font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:rgba(17,17,17,0.45);}
+  .landing-card-title{font-size:16px;font-weight:800;line-height:1.2;color:#111;}
+  .landing-card-copy{font-size:12px;line-height:1.55;color:#544F63;}
+  .landing-card-cta{margin-top:4px;font-size:12px;font-weight:800;color:#534AB7;}
+  .landing-card-cta-green{color:#0F6E56;}
+  .landing-swipe{width:max-content;border:none;border-radius:999px;background:rgba(255,255,255,0.78);color:#534AB7;padding:10px 14px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 12px 30px rgba(83,74,183,0.10);}
+  .landing-swipe span{display:inline-block;animation:landingBob 1.3s ease-in-out infinite;}
+  .landing-problem-list{display:flex;flex-direction:column;gap:10px;}
+  .landing-problem{width:100%;border:none;border-radius:20px;background:rgba(255,255,255,0.84);backdrop-filter:blur(14px);padding:16px;text-align:left;cursor:pointer;display:flex;align-items:flex-start;gap:14px;box-shadow:0 18px 40px rgba(17,17,17,0.07);}
+  .landing-problem .oicon{width:40px;height:40px;background:rgba(127,119,221,0.12);color:#534AB7;}
+  .landing-problem-title{font-size:14px;font-weight:700;color:#111;}
+  .landing-problem-copy{font-size:12px;color:#65606E;line-height:1.55;margin-top:4px;}
+  .landing-wide-cta{margin-top:2px;box-shadow:0 18px 36px rgba(83,74,183,0.22);}
+  .landing-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .landing-stat{background:rgba(255,255,255,0.82);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.52);border-radius:18px;padding:14px 12px;box-shadow:0 16px 36px rgba(17,17,17,0.07);}
+  .landing-stat-value{font-size:22px;font-weight:800;color:#111;line-height:1;}
+  .landing-stat-label{font-size:11px;color:#7A7A86;line-height:1.45;margin-top:6px;}
+  .landing-mentor-note{background:#103E33;color:#E9FFF5;border-radius:24px;padding:18px;box-shadow:0 22px 44px rgba(16,62,51,0.22);}
+  .landing-mentor-note-title{font-size:15px;font-weight:800;line-height:1.3;}
+  .landing-mentor-note-copy{font-size:12px;line-height:1.7;color:rgba(233,255,245,0.78);margin-top:6px;}
+  .landing-actions{display:flex;flex-direction:column;gap:10px;}
+
+  /* ADMIN */
+  .admin-scroll{padding:14px 22px 28px;overflow-y:auto;max-height:calc(100vh - 96px);}
+  .admin-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+  .admin-metric{background:#f7f6f3;border-radius:14px;padding:14px 12px;}
+  .admin-metric-val{font-size:22px;font-weight:800;color:#111;line-height:1;}
+  .admin-metric-lbl{font-size:11px;color:#8B8B95;line-height:1.45;margin-top:6px;}
+  .admin-section-title{font-size:14px;font-weight:700;color:#111;}
+  .admin-section-copy{font-size:12px;color:#888;line-height:1.6;margin-top:4px;margin-bottom:12px;}
+  .admin-list{display:flex;flex-direction:column;gap:10px;}
+  .admin-item{background:#fff;border:1.5px solid #eee;border-radius:14px;padding:14px 15px;}
+  .admin-item-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .admin-item-name{font-size:14px;font-weight:700;color:#111;}
+  .admin-item-meta{font-size:11px;color:#999;margin-top:4px;}
+  .admin-item-copy{font-size:12px;color:#666;line-height:1.6;margin-top:10px;}
+  .admin-item-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+  .admin-empty{padding:16px;border-radius:14px;background:#f7f6f3;color:#888;font-size:12px;line-height:1.7;}
+  .admin-note{margin-top:12px;font-size:11px;color:#999;line-height:1.6;}
+  @keyframes landingBob{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(4px);}
+  }
+  @media(max-height:720px){
+    .landing-panel{padding-top:78px;padding-bottom:24px;}
+    .landing-title{font-size:30px;}
+    .landing-sub{font-size:13px;line-height:1.6;}
+    .landing-audience-card{padding:16px 14px 14px;}
+    .landing-problem{padding:14px;}
+    .landing-top-actions{gap:6px;}
+    .landing-pill-btn{padding:9px 12px;font-size:11px;}
+  }
+
+  @media(min-width:480px){
+    body{background:#f4f3f0;display:flex;justify-content:center;padding:24px 16px;}
+    .phone{max-width:390px;border-radius:32px;box-shadow:0 8px 40px rgba(0,0,0,0.13);}
+    .landing-topbar{padding:20px 20px 0;}
+    .landing-panel{padding-left:28px;padding-right:28px;}
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="sbar"><span class="sbar-t" id="clock">9:41</span><span class="sbar-i">●●● ▮▮</span></div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION A: STUDENT APP
+  ════════════════════════════════════════════ -->
+
+  <!-- HOME / LANDING -->
+  <div class="screen active" id="page-landing">
+    <div class="landing-shell">
+      <div class="landing-topbar">
+        <div class="landing-brand">RisePath</div>
+        <div class="landing-top-actions">
+          <button class="landing-pill-btn" onclick="goScreen('page-interest')">Join waitlist ↗</button>
+        </div>
+      </div>
+
+      <div class="landing-dots" aria-label="Landing sections">
+        <button class="landing-dot active" onclick="jumpLanding(0)" aria-label="Go to intro"></button>
+        <button class="landing-dot" onclick="jumpLanding(1)" aria-label="Go to student challenges"></button>
+        <button class="landing-dot" onclick="jumpLanding(2)" aria-label="Go to mentor section"></button>
+      </div>
+
+      <div class="landing-flow" id="landing-flow" data-preserve-scroll="landing-flow">
+        <section class="landing-panel landing-panel-hero" data-landing-index="0">
+          <div class="landing-glow landing-glow-a"></div>
+          <div class="landing-glow landing-glow-b"></div>
+          <div class="landing-panel-inner">
+            <div class="landing-kicker landing-anim" style="--delay:0.05s;">Mentorship for the messy middle</div>
+            <div class="landing-anim" style="--delay:0.12s;">
+              <div class="landing-title">Peer mentorship for career, focus, and confidence.</div>
+              <div class="landing-sub">A cleaner first step for students who feel lost, and a meaningful give-back path for mentors who have already lived through that confusion.</div>
+            </div>
+            <div class="landing-audience-grid landing-anim" style="--delay:0.22s;">
+              <button class="landing-audience-card landing-card-student" onclick="beginStudentFlow()">
+                <div class="landing-card-icon">🎓</div>
+                <div class="landing-card-tag">Student</div>
+                <div class="landing-card-title">I am 17–23</div>
+                <div class="landing-card-copy">I need direction, steadiness, and someone who genuinely gets it.</div>
+                <div class="landing-card-cta">Find my mentor ›</div>
+              </button>
+              <button class="landing-audience-card landing-card-mentor" onclick="goScreen('page-mentor-welcome')">
+                <div class="landing-card-icon">🤝</div>
+                <div class="landing-card-tag">Mentor</div>
+                <div class="landing-card-title">I am 24–30</div>
+                <div class="landing-card-copy">I have been there before, and I want to help someone through it.</div>
+                <div class="landing-card-cta landing-card-cta-green">Become a mentor ›</div>
+              </button>
+            </div>
+            <button class="landing-swipe landing-anim" style="--delay:0.32s;" onclick="jumpLanding(1)">Swipe or scroll to explore <span>↓</span></button>
+          </div>
+        </section>
+
+        <section class="landing-panel landing-panel-students" data-landing-index="1">
+          <div class="landing-panel-inner">
+            <div class="landing-kicker landing-anim" style="--delay:0.05s;">What students face</div>
+            <div class="landing-anim" style="--delay:0.12s;">
+              <div class="landing-title">Not lazy. Not broken. Just stuck without the right person beside you.</div>
+              <div class="landing-sub">Each card opens the full problem screen, but this home flow keeps the story one screen at a time.</div>
+            </div>
+            <div class="landing-problem-list">
+              <button class="landing-problem landing-anim" style="--delay:0.20s;" onclick="goDetail('distraction')">
+                <div class="oicon">📵</div>
+                <div>
+                  <div class="landing-problem-title">Too distracted to focus</div>
+                  <div class="landing-problem-copy">Phone, social media, and procrastination slowly eat up the day.</div>
+                </div>
+              </button>
+              <button class="landing-problem landing-anim" style="--delay:0.26s;" onclick="goDetail('career')">
+                <div class="oicon">🧭</div>
+                <div>
+                  <div class="landing-problem-title">No clear career path</div>
+                  <div class="landing-problem-copy">Everyone else looks sure. You are still trying to hear your own direction.</div>
+                </div>
+              </button>
+              <button class="landing-problem landing-anim" style="--delay:0.32s;" onclick="goDetail('morale')">
+                <div class="oicon">💭</div>
+                <div>
+                  <div class="landing-problem-title">Low confidence and self-doubt</div>
+                  <div class="landing-problem-copy">Comparison gets loud, and progress feels smaller than it really is.</div>
+                </div>
+              </button>
+            </div>
+            <button class="cta landing-wide-cta landing-anim" style="--delay:0.38s;" onclick="beginStudentFlow()">Find my mentor — 3 quick questions ›</button>
+          </div>
+        </section>
+
+        <section class="landing-panel landing-panel-mentor" data-landing-index="2">
+          <div class="landing-panel-inner">
+            <div class="landing-kicker landing-anim" style="--delay:0.05s;">For mentors 24–30</div>
+            <div class="landing-anim" style="--delay:0.12s;">
+              <div class="landing-title">Your lived experience can become someone else's turning point.</div>
+              <div class="landing-sub">RisePath is intentionally light. Small check-ins, honest perspective, and a real human voice when a student needs it most.</div>
+            </div>
+            <div class="landing-stat-row landing-anim" style="--delay:0.20s;">
+              <div class="landing-stat">
+                <div class="landing-stat-value">1–2h</div>
+                <div class="landing-stat-label">per week, designed to stay realistic</div>
+              </div>
+              <div class="landing-stat">
+                <div class="landing-stat-value">1:1</div>
+                <div class="landing-stat-label">support that feels human, not generic</div>
+              </div>
+              <div class="landing-stat">
+                <div class="landing-stat-value">Real</div>
+                <div class="landing-stat-label">impact through story, structure, and care</div>
+              </div>
+            </div>
+            <div class="landing-mentor-note landing-anim" style="--delay:0.28s;">
+              <div class="landing-mentor-note-title">You do not need to be perfect. You just need to be honest, steady, and a few steps ahead.</div>
+              <div class="landing-mentor-note-copy">Students connect more with relatability than polished advice. That is exactly why this model works.</div>
+            </div>
+            <div class="landing-actions landing-anim" style="--delay:0.36s;">
+              <button class="cta cta-green" onclick="goScreen('page-mentor-welcome')">Become a mentor ›</button>
+              <button class="sec-btn" onclick="goScreen('page-interest')">Open waitlist form ›</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PROBLEM DETAIL: DISTRACTION -->
+  <div class="screen" id="page-distraction">
+    <div class="back-row" onclick="goBack('page-landing')"><span class="bch">‹</span><span class="blbl">Back</span></div>
+    <div style="background:#FAECE7;padding:18px 22px 16px;margin-top:10px;">
+      <div class="htag htag-c">Problem</div>
+      <div class="htitle">Too distracted to focus</div>
+      <div class="hsub">Hours vanish into your phone. Study plans never start. Guilt builds up daily.</div>
+    </div>
+    <div class="bp" style="padding-top:16px;">
+      <div style="background:#E1F5EE;border-radius:12px;padding:14px 16px;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:700;color:#085041;margin-bottom:4px;">How RisePath solves this</div>
+        <div style="font-size:12px;color:#0F6E56;line-height:1.6;">Your mentor has lived through this. They share small real habits — not lectures — that break the cycle.</div>
+      </div>
+      <div class="sec-label">Steps your mentor takes with you</div>
+      <div class="step-row"><div class="step-num step-num-t">1</div><div><div class="step-title">Identify your distraction triggers</div><div class="step-desc">Together you pinpoint exactly when and why you reach for your phone.</div></div></div>
+      <div class="step-row"><div class="step-num step-num-t">2</div><div><div class="step-title">Replace with a 10-min focus habit</div><div class="step-desc">Start with just 10 minutes of focused work. Build from there, no pressure.</div></div></div>
+      <div class="step-row"><div class="step-num step-num-t">3</div><div><div class="step-title">Track streak, celebrate wins</div><div class="step-desc">Your mentor cheers every small win — this keeps momentum going.</div></div></div>
+      <button class="cta" onclick="beginStudentFlow()">Find my mentor ›</button>
+    </div>
+  </div>
+
+  <!-- PROBLEM DETAIL: CAREER -->
+  <div class="screen" id="page-career">
+    <div class="back-row" onclick="goBack('page-landing')"><span class="bch">‹</span><span class="blbl">Back</span></div>
+    <div style="background:#EEEDFE;padding:18px 22px 16px;margin-top:10px;">
+      <div class="htag htag-p">Problem</div>
+      <div class="htitle">No clear career path</div>
+      <div class="hsub">Everyone around you seems confident. You feel behind and overwhelmed by choices.</div>
+    </div>
+    <div class="bp" style="padding-top:16px;">
+      <div style="background:#E1F5EE;border-radius:12px;padding:14px 16px;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:700;color:#085041;margin-bottom:4px;">How RisePath solves this</div>
+        <div style="font-size:12px;color:#0F6E56;line-height:1.6;">Your mentor helps you explore one direction at a time — no pressure to have all the answers today.</div>
+      </div>
+      <div class="sec-label">Steps your mentor takes with you</div>
+      <div class="step-row"><div class="step-num">1</div><div><div class="step-title">Talk about what excites you</div><div class="step-desc">No aptitude tests. Just an honest conversation about what you enjoy.</div></div></div>
+      <div class="step-row"><div class="step-num">2</div><div><div class="step-title">Explore one field this month</div><div class="step-desc">3 simple ways to try a career path — without committing to anything.</div></div></div>
+      <div class="step-row"><div class="step-num">3</div><div><div class="step-title">Get real stories, not advice</div><div class="step-desc">They share exactly how they found their direction — including the wrong turns.</div></div></div>
+      <button class="cta" onclick="beginStudentFlow()">Find my mentor ›</button>
+    </div>
+  </div>
+
+  <!-- PROBLEM DETAIL: MORALE -->
+  <div class="screen" id="page-morale">
+    <div class="back-row" onclick="goBack('page-landing')"><span class="bch">‹</span><span class="blbl">Back</span></div>
+    <div style="background:#E1F5EE;padding:18px 22px 16px;margin-top:10px;">
+      <div class="htag htag-t">Problem</div>
+      <div class="htitle">Low confidence & self-doubt</div>
+      <div class="hsub">You feel like everyone else has figured it out. You wonder if you're good enough.</div>
+    </div>
+    <div class="bp" style="padding-top:16px;">
+      <div style="background:#E1F5EE;border-radius:12px;padding:14px 16px;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:700;color:#085041;margin-bottom:4px;">How RisePath solves this</div>
+        <div style="font-size:12px;color:#0F6E56;line-height:1.6;">Mentors who felt the exact same way show you — through their own story — that you're on the right track.</div>
+      </div>
+      <div class="sec-label">Steps your mentor takes with you</div>
+      <div class="step-row"><div class="step-num step-num-t">1</div><div><div class="step-title">Daily 10-second mood check-in</div><div class="step-desc">Your mentor sees how you feel and reaches out before things get worse.</div></div></div>
+      <div class="step-row"><div class="step-num step-num-t">2</div><div><div class="step-title">Honest conversations, no judgment</div><div class="step-desc">Say anything. They've heard it all — because they felt it all too.</div></div></div>
+      <div class="step-row"><div class="step-num step-num-t">3</div><div><div class="step-title">Celebrate tiny progress</div><div class="step-desc">Every small win is noticed and named. Confidence grows from real moments.</div></div></div>
+      <button class="cta" onclick="beginStudentFlow()">Find my mentor ›</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STUDENT QUIZ FLOW
+  ═══════════════════════════════════════ -->
+
+  <!-- QUIZ WELCOME -->
+  <div class="screen" id="page-quiz-welcome">
+    <div style="padding:32px 22px 16px;text-align:center;">
+      <div style="width:62px;height:62px;border-radius:18px;background:#EEEDFE;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:26px;font-weight:700;color:#534AB7;">R</div>
+      <div style="font-size:21px;font-weight:700;color:#111;line-height:1.3;margin-bottom:8px;">Find your mentor in 3 questions</div>
+      <div style="font-size:13px;color:#777;line-height:1.6;margin-bottom:18px;">No long forms. Three honest questions — and we'll match you with someone who truly gets it.</div>
+    </div>
+    <div class="bp">
+      <div class="surface" style="margin-bottom:14px;">
+        <div style="font-size:13px;color:#666;line-height:1.8;">✓ &nbsp;Takes under 2 minutes<br>✓ &nbsp;Your answers stay private<br>✓ &nbsp;Change your mentor any time</div>
+      </div>
+      <div class="field-label" style="margin-top:0;">What's your name?</div>
+      <input class="field-input" id="uname" type="text" placeholder="e.g. Arjun"/>
+      <button class="cta" onclick="goScreen('page-q1')" style="margin-top:14px;">Let's find my mentor ›</button>
+      <button class="sec-btn" onclick="goBack('page-landing')">← Back</button>
+    </div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="screen" id="page-q1">
+    <div class="back-row" onclick="goBack('page-quiz-welcome')"><span class="bch">‹</span><span class="blbl">Back</span></div>
+    <div class="ptrack" style="margin-top:10px;"><div class="pfill" style="width:33%;"></div></div>
+    <div class="slabel">Question 1 of 3</div>
+    <div class="hero">
+      <div class="htag htag-p">What's going on?</div>
+      <div class="htitle">What's your biggest struggle right now?</div>
+      <div class="hsub">Pick the one that feels most true today.</div>
+    </div>
+    <div class="bp">
+      <div class="opt" onclick="pickQ1(this,'career')"><div class="oicon">🧭</div><div><div class="otitle">I don't know what career to choose</div><div class="osub">Everything feels equally uncertain. Lost on where to start.</div></div></div>
+      <div class="opt" onclick="pickQ1(this,'doubt')"><div class="oicon">💭</div><div><div class="otitle">I doubt myself all the time</div><div class="osub">I compare myself to others and feel not good enough.</div></div></div>
+      <div class="opt" onclick="pickQ1(this,'focus')"><div class="oicon">📵</div><div><div class="otitle">I can't focus or stop getting distracted</div><div class="osub">Phone, social media, procrastination — I can't stop.</div></div></div>
+      <div class="opt" onclick="pickQ1(this,'pressure')"><div class="oicon">😰</div><div><div class="otitle">I'm under too much pressure</div><div class="osub">Family, exams, future — it all feels overwhelming.</div></div></div>
+      <button class="cta-dim" id="q1-btn" onclick="if(q1sel)goScreen('page-q2')">Continue ›</button>
+    </div>
+    <div class="dot-row"><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+    <div style="height:16px;"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="screen" id="page-q2">
+    <div class="back-row" onclick="goBack('page-q1')"><span class="bch">‹</span><span class="blbl">Back</span></div>
+    <div class="ptrack" style="margin-top:10px;"><div class="pfill" style="width:66%;"></div></div>
+    <div class="slabel">Question 2 of 3</div>
+    <div class="hero">
+      <div class="htag htag-c">What you need</div>
+      <div class="htitle">What kind of support helps you most?</div>
+      <div class="hsub">Be honest — there's no wrong answer here.</div>
+    </div>
+    <div class="bp">
+      <div class="opt" onclick="pickQ2(this,'talk')"><div class="oicon">🫂</div><div><div class="otitle">Someone to just talk to</div><div class="osub">I need to be heard and understood first.</div></div></div>
+      <div class="opt" onclick="pickQ2(this,'plan')"><div class="oicon">📋</div><div><div class="otitle">A clear plan and direction</div><div class="osub">Tell me what steps to take. I work better with structure.</div></div></div>
+      <div class="opt" onclick="pickQ2(this,'story')"><div class="oicon">📖</div><div><div class="otitle">Real stories from someone who's been there</div><div class="osub">I want to know how someone else got through the same thing.</div></div></div>
+      <div class="opt" onclick="pickQ2(this,'check')"><div class="oicon">✅</div><div><div class="otitle">Regular check-ins to keep me on track</div><div class="osub">I need accountability — someone to check in gently.</div></div></div>
+      <button class="cta-dim" id="q2-btn" onclick="if(q2sel)goScreen('page-q3')">Continue ›</button>
+    </div>
+    <div class="dot-row"><div class="dot"></div><div class="dot active"></div><div class="dot"></div></div>
+    <div style="height:16px;"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="screen" id="page-q3">
+    <div class="back-row" onclick="goBack('page-q2')"><span class="bch">‹</span><span class="blbl">Back</span></div>
+    <div class="ptrack" style="margin-top:10px;"><div class="pfill" style="width:100%;"></div></div>
+    <div class="slabel">Question 3 of 3</div>
+    <div class="hero">
+      <div class="htag htag-t">Your comfort</div>
+      <div class="htitle">How do you like to connect?</div>
+      <div class="hsub">Pick what feels most comfortable for you.</div>
+    </div>
+    <div class="bp">
+      <div class="opt" onclick="pickQ3(this,'chat')"><div class="oicon">💬</div><div><div class="otitle">Chat / messages only</div><div class="osub">I prefer texting. Not ready for video calls yet.</div></div></div>
+      <div class="opt" onclick="pickQ3(this,'video')"><div class="oicon">📹</div><div><div class="otitle">Video calls</div><div class="osub">I open up better face to face. A weekly call would help.</div></div></div>
+      <div class="opt" onclick="pickQ3(this,'both')"><div class="oicon">🔄</div><div><div class="otitle">Both — start with chat, video later</div><div class="osub">Let me get comfortable first, then move to video.</div></div></div>
+      <button class="cta-dim" id="q3-btn" onclick="if(q3sel)goScreen('page-matching')">Find my mentor ›</button>
+    </div>
+    <div class="dot-row"><div class="dot"></div><div class="dot"></div><div class="dot active"></div></div>
+    <div style="height:16px;"></div>
+  </div>
+
+  <!-- MATCHING ANIMATION -->
+  <div class="screen" id="page-matching">
+    <div style="padding:48px 22px;text-align:center;">
+      <div style="width:64px;height:64px;border-radius:50%;background:#EEEDFE;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:24px;">🔍</div>
+      <div style="font-size:18px;font-weight:700;color:#111;margin-bottom:8px;">Finding your match...</div>
+      <div style="font-size:13px;color:#777;line-height:1.6;margin-bottom:24px;">We're looking at your answers and finding the right person.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;text-align:left;">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:#f7f6f3;border-radius:12px;" id="ch1"><span id="ch1-icon" style="font-size:16px;color:#ccc;">○</span><span style="font-size:13px;color:#777;">Reading your struggle...</span></div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:#f7f6f3;border-radius:12px;" id="ch2"><span id="ch2-icon" style="font-size:16px;color:#ccc;">○</span><span style="font-size:13px;color:#777;">Finding mentors who've been there...</span></div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:#f7f6f3;border-radius:12px;" id="ch3"><span id="ch3-icon" style="font-size:16px;color:#ccc;">○</span><span style="font-size:13px;color:#777;">Picking the best match for you...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MATCH RESULT -->
+  <div class="screen" id="page-match-result">
+    <div style="padding:22px 22px 0;text-align:center;">
+      <span class="badge bt" style="margin-bottom:12px;display:inline-block;padding:4px 14px;font-size:12px;">Your mentor match ✓</span>
+      <div style="font-size:14px;color:#777;margin-bottom:14px;" id="match-greeting">Hi there, meet your mentor —</div>
+    </div>
+    <div class="bp">
+      <div class="mentor-card">
+        <div class="match-av" id="m-av" style="background:#EEEDFE;color:#534AB7;">PS</div>
+        <div style="text-align:center;">
+          <div style="font-size:17px;font-weight:700;color:#111;" id="m-name">Priya Sharma</div>
+          <div style="font-size:12px;color:#888;margin-top:3px;" id="m-role">UX Designer · 27 · Hyderabad</div>
+          <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:8px;" id="m-tags"></div>
+        </div>
+        <div class="match-quote" id="m-quote">"I was exactly where you are at 19."</div>
+      </div>
+      <div class="why-box">
+        <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:4px;">Why we matched you</div>
+        <div style="font-size:12px;color:#666;line-height:1.6;" id="why-text">Based on your answers, this mentor fits your situation perfectly.</div>
+      </div>
+      <button class="cta" onclick="goScreen('page-first-chat')">Say hello ›</button>
+      <button class="sec-btn" onclick="goScreen('page-dashboard')">Go to my dashboard</button>
+    </div>
+  </div>
+
+  <!-- FIRST CHAT -->
+  <div class="screen" id="page-first-chat">
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1.5px solid #f0f0f0;">
+      <div class="avatar av-p" id="fc-av">PS</div>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:#111;" id="fc-name">Priya Sharma</div>
+        <div style="font-size:12px;color:#1D9E75;">Online now</div>
+      </div>
+    </div>
+    <div style="padding:16px 18px;display:flex;flex-direction:column;gap:12px;min-height:360px;" id="chat-msgs">
+      <div class="msg them"><div class="bubble bubble-them">Hi! I saw your answers — I really get what you're feeling. I felt exactly the same at your age. So happy you're here.</div><div class="msg-time">Just now</div></div>
+      <div class="msg them"><div class="bubble bubble-them">No pressure at all. Just tell me — what's been on your mind lately?</div><div class="msg-time">Just now</div></div>
+    </div>
+    <div style="padding:10px 16px;border-top:1.5px solid #f0f0f0;display:flex;gap:10px;align-items:center;">
+      <input id="first-msg" type="text" style="flex:1;padding:10px 16px;border:1.5px solid #e0e0e0;border-radius:22px;font-size:14px;background:#f7f6f3;color:#111;outline:none;" placeholder="Type your first message..." onkeydown="if(event.key==='Enter')sendFirst()"/>
+      <button class="send-btn" onclick="sendFirst()">↑</button>
+    </div>
+    <div style="text-align:center;padding:10px 22px 16px;">
+      <button class="sec-btn" style="font-size:13px;" onclick="goScreen('page-dashboard')">Go to my dashboard →</button>
+    </div>
+  </div>
+
+  <!-- STUDENT DASHBOARD -->
+  <div class="screen" id="page-dashboard">
+    <div style="padding:20px 22px 14px;border-bottom:1.5px solid #f0f0f0;">
+      <div style="font-size:17px;font-weight:700;color:#111;">Good morning, <span id="dash-name">Arjun</span> 👋</div>
+      <div style="font-size:12px;color:#aaa;margin-top:3px;">You have 2 sessions this week</div>
+    </div>
+    <div style="padding:16px 22px 80px;overflow-y:auto;max-height:calc(100vh - 130px);" data-preserve-scroll="dashboard-main">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-val">3</div><div class="stat-lbl">Sessions</div></div>
+        <div class="stat-card"><div class="stat-val">2</div><div class="stat-lbl">Mentors</div></div>
+        <div class="stat-card"><div class="stat-val">5🔥</div><div class="stat-lbl">Day streak</div></div>
+      </div>
+      <div class="sec-label">Upcoming sessions</div>
+      <div class="session-card"><span class="sess-time">Today, 5:00 PM</span><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:#111;">Priya S.</div><div style="font-size:12px;color:#888;margin-top:2px;">Resume review + career clarity</div></div><span class="badge bt">Video</span></div>
+      <div class="session-card"><span class="sess-time">Thu, 7:00 PM</span><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:#111;">Rohan M.</div><div style="font-size:12px;color:#888;margin-top:2px;">Handling self-doubt in college</div></div><span class="badge bp">Video</span></div>
+      <div class="sec-label" style="margin-top:16px;">Quick actions</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+        <button class="sec-btn" style="margin-top:0;font-size:13px;" onclick="goScreen('page-mentors')">Find mentors</button>
+        <button class="sec-btn" style="margin-top:0;font-size:13px;" onclick="goScreen('page-first-chat')">Messages</button>
+        <button class="sec-btn" style="margin-top:0;font-size:13px;" onclick="goScreen('page-mood')">Mood check-in</button>
+        <button class="sec-btn" style="margin-top:0;font-size:13px;" onclick="goScreen('page-goals')">My goals</button>
+      </div>
+    </div>
+    <div class="nav-bar">
+      <div class="nav-btn active">Home<div class="nav-dot"></div></div>
+      <div class="nav-btn" onclick="goScreen('page-mentors')">Mentors</div>
+      <div class="nav-btn" onclick="goScreen('page-first-chat')">Chat</div>
+      <div class="nav-btn" onclick="goScreen('page-goals')">Goals</div>
+    </div>
+  </div>
+
+  <!-- MENTORS LIST -->
+  <div class="screen" id="page-mentors">
+    <div style="padding:18px 22px 14px;border-bottom:1.5px solid #f0f0f0;">
+      <div style="font-size:17px;font-weight:700;color:#111;">Find a mentor</div>
+      <div style="font-size:12px;color:#aaa;margin-top:3px;">Matched with people who've been where you are</div>
+    </div>
+    <div style="padding:12px 22px 80px;overflow-y:auto;max-height:calc(100vh - 120px);" data-preserve-scroll="mentor-list">
+      <div class="mentor-card">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div class="avatar av-t" style="width:46px;height:46px;">PS</div>
+          <div style="flex:1;">
+            <div class="mentor-name">Priya Sharma, 27</div>
+            <div class="mentor-title">UX Designer · Hyderabad</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;"><span class="badge bt">Career</span><span class="badge bp">Self-doubt</span><span class="badge bb">Design</span></div>
+            <div class="mentor-bio">"I was exactly where you are at 19 — unsure, distracted, lost. Now I help others find their path."</div>
+          </div>
+        </div>
+        <div class="mentor-actions"><button class="mbtn mbtn-p" onclick="goScreen('page-first-chat')">Message</button><button class="mbtn">Book call</button></div>
+      </div>
+      <div class="mentor-card">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div class="avatar av-c" style="width:46px;height:46px;">RM</div>
+          <div style="flex:1;">
+            <div class="mentor-name">Rohan Mehta, 29</div>
+            <div class="mentor-title">Software Engineer · Bengaluru</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;"><span class="badge bc">Mental strength</span><span class="badge bp">Focus</span><span class="badge bt">Tech</span></div>
+            <div class="mentor-bio">"Failed two placements before cracking my dream job. I know what burnout looks like and how to push through it."</div>
+          </div>
+        </div>
+        <div class="mentor-actions"><button class="mbtn mbtn-p">Message</button><button class="mbtn">Book call</button></div>
+      </div>
+      <div class="mentor-card">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div class="avatar av-b" style="width:46px;height:46px;">NK</div>
+          <div style="flex:1;">
+            <div class="mentor-name">Nisha Krishnan, 26</div>
+            <div class="mentor-title">MBA Student · Chennai</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;"><span class="badge bb">Study habits</span><span class="badge bc">Exam stress</span><span class="badge bp">Goals</span></div>
+            <div class="mentor-bio">"I used to scroll for hours instead of studying. Small daily systems changed everything."</div>
+          </div>
+        </div>
+        <div class="mentor-actions"><button class="mbtn mbtn-p">Message</button><button class="mbtn">Book call</button></div>
+      </div>
+    </div>
+    <div class="nav-bar">
+      <div class="nav-btn" onclick="goScreen('page-dashboard')">Home</div>
+      <div class="nav-btn active">Mentors<div class="nav-dot"></div></div>
+      <div class="nav-btn" onclick="goScreen('page-first-chat')">Chat</div>
+      <div class="nav-btn" onclick="goScreen('page-goals')">Goals</div>
+    </div>
+  </div>
+
+  <!-- MOOD CHECK-IN -->
+  <div class="screen" id="page-mood">
+    <div class="back-row" onclick="goBack('page-dashboard')"><span class="bch">‹</span><span class="blbl">Back</span></div>
+    <div style="padding:16px 22px 8px;">
+      <div style="font-size:17px;font-weight:700;color:#111;">Mood check-in</div>
+      <div style="font-size:12px;color:#aaa;margin-top:3px;">How are you feeling today? Your mentor can see this.</div>
+    </div>
+    <div class="bp" style="padding-top:12px;">
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:10px;">How's your energy right now?</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;"><span class="mood-tag" onclick="tog(this)">Energised</span><span class="mood-tag" onclick="tog(this)">Okay</span><span class="mood-tag" onclick="tog(this)">Tired</span><span class="mood-tag" onclick="tog(this)">Burnt out</span></div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:10px;">What's weighing on you most?</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;"><span class="mood-tag" onclick="tog(this)">Exam pressure</span><span class="mood-tag" onclick="tog(this)">Career confusion</span><span class="mood-tag" onclick="tog(this)">Distractions</span><span class="mood-tag" onclick="tog(this)">Family stress</span><span class="mood-tag" onclick="tog(this)">Loneliness</span><span class="mood-tag" onclick="tog(this)">Nothing major</span></div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:10px;">What kind of support do you need?</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;"><span class="mood-tag" onclick="tog(this)">Just someone to talk to</span><span class="mood-tag" onclick="tog(this)">Career advice</span><span class="mood-tag" onclick="tog(this)">Study motivation</span><span class="mood-tag" onclick="tog(this)">Reality check</span></div>
+      </div>
+      <button class="cta" onclick="submitMood()">Share with my mentor</button>
+      <div id="mood-confirm" style="display:none;text-align:center;color:#0F6E56;font-size:13px;margin-top:12px;padding:12px;background:#E1F5EE;border-radius:12px;font-weight:600;">✓ Priya has been notified and will respond soon.</div>
+    </div>
+  </div>
+
+  <!-- GOALS -->
+  <div class="screen" id="page-goals">
+    <div style="padding:18px 22px 14px;border-bottom:1.5px solid #f0f0f0;">
+      <div style="font-size:17px;font-weight:700;color:#111;">My goals</div>
+      <div style="font-size:12px;color:#aaa;margin-top:3px;">Set with your mentor and tracked together</div>
+    </div>
+    <div style="padding:16px 22px 80px;overflow-y:auto;max-height:calc(100vh - 120px);" data-preserve-scroll="goals-main">
+      <div class="card" style="margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><div style="font-size:14px;font-weight:700;color:#111;">Explore UX as a career</div><span class="badge bt">In progress</span></div>
+        <div class="prog-row"><div class="prog-label">Watch 3 videos</div><div class="prog-bg"><div class="prog-fill" style="width:100%;background:#7F77DD;"></div></div><div class="prog-pct">3/3 ✓</div></div>
+        <div class="prog-row"><div class="prog-label">Do 1 mini project</div><div class="prog-bg"><div class="prog-fill" style="width:40%;background:#AFA9EC;"></div></div><div class="prog-pct">40%</div></div>
+        <div class="prog-row"><div class="prog-label">Talk to 1 pro</div><div class="prog-bg"><div class="prog-fill" style="width:0%;background:#eee;"></div></div><div class="prog-pct">0/1</div></div>
+      </div>
+      <div class="card" style="margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><div style="font-size:14px;font-weight:700;color:#111;">Reduce screen time by 1hr/day</div><span class="badge bp">Active</span></div>
+        <div class="prog-row"><div class="prog-label">Week 1</div><div class="prog-bg"><div class="prog-fill" style="width:85%;background:#7F77DD;"></div></div><div class="prog-pct">85%</div></div>
+        <div class="prog-row"><div class="prog-label">Week 2</div><div class="prog-bg"><div class="prog-fill" style="width:60%;background:#AFA9EC;"></div></div><div class="prog-pct">60%</div></div>
+      </div>
+      <button class="sec-btn" style="margin-top:0;">+ Add a new goal with my mentor</button>
+    </div>
+    <div class="nav-bar">
+      <div class="nav-btn" onclick="goScreen('page-dashboard')">Home</div>
+      <div class="nav-btn" onclick="goScreen('page-mentors')">Mentors</div>
+      <div class="nav-btn" onclick="goScreen('page-first-chat')">Chat</div>
+      <div class="nav-btn active">Goals<div class="nav-dot"></div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       MENTOR SIGN-UP FLOW
+  ═══════════════════════════════════════ -->
+
+  <!-- MENTOR WELCOME -->
+  <div class="screen" id="page-mentor-welcome">
+    <div style="padding:32px 22px 16px;text-align:center;">
+      <div style="width:62px;height:62px;border-radius:18px;background:#E1F5EE;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:26px;">🤝</div>
+      <div style="font-size:21px;font-weight:700;color:#111;line-height:1.3;margin-bottom:8px;">Become a RisePath mentor</div>
+      <div style="font-size:13px;color:#777;line-height:1.6;margin-bottom:6px;">You were 17–20 once. You know how hard it was. Help someone who is there right now.</div>
+    </div>
+    <div class="bp">
+      <div class="surface">
+        <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:8px;">What you'll do as a mentor</div>
+        <div style="font-size:13px;color:#666;line-height:1.8;">💬 &nbsp;Chat or video call with your mentee<br>🎯 &nbsp;Help them set small weekly goals<br>🗣️ &nbsp;Share real advice — not lectures<br>⏱️ &nbsp;Around 1–2 hours per week</div>
+      </div>
+      <div class="info-box" style="margin-top:12px;margin-bottom:16px;">
+        <div class="info-text">Only open to people aged 25–30 who want to genuinely give back. No payment — just impact.</div>
+      </div>
+      <button class="cta cta-green" onclick="beginMentorFlow()">I want to be a mentor ›</button>
+      <div style="text-align:center;margin-top:10px;font-size:12px;color:#bbb;">Takes about 4 minutes</div>
+      <button class="sec-btn" onclick="goBack('page-landing')">← Back to home</button>
+    </div>
+  </div>
+
+  <!-- MENTOR STEP 1 -->
+  <div class="screen" id="page-m1">
+    <div class="back-row" onclick="goBack('page-mentor-welcome')"><span class="bch">‹</span><span class="blbl">Back</span></div>
+    <div class="ptrack" style="margin-top:10px;"><div class="pfill" style="width:20%;background:#1D9E75;"></div></div>
+    <div class="slabel">Step 1 of 5</div>
+    <div class="hero">
+      <div class="htag htag-t">About you</div>
+      <div class="htitle">Let's start with the basics</div>
+      <div class="hsub">This will appear on your mentor profile.</div>
+    </div>
+    <div class="bp">
+      <div class="av-upload" onclick="animateAv()"><div class="av-init" id="av-init">+</div><div class="av-sub" id="av-sub">Add photo</div></div>
+      <div class="field-label">Full name</div>
+      <input class="field-input" type="text" placeholder="e.g. Priya Sharma" id="m-name-in"/>
+      <div class="field-label">Age</div>
+      <input class="field-input" id="m-age-in" type="number" placeholder="Must be 25–30" min="25" max="30"/>
+      <div class="field-label">City</div>
+      <input class="field-input" id="m-city-in" type="text" placeholder="e.g. Hyderabad"/>
+      <div class="field-label">Current role</div>
+      <input class="field-input" id="m-role-in" type="text" placeholder="e.g. UX Designer at a startup"/>
+      <button class="cta cta-green" onclick="goScreen('page-m2')" style="margin-top:20px;">Continue ›</button>
+    </div>
+  </div>
+
+  <!-- MENTOR STEP 2 -->
+  <div class="screen" id="page-m2">
+    <div class="back-row" onclick="goBack('page-m1')"><span class="bch">‹</span><span class="blbl">Back</span></div>
+    <div class="ptrack" style="margin-top:10px;"><div class="pfill" style="width:40%;background:#1D9E75;"></div></div>
+    <div class="slabel">Step 2 of 5</div>
+    <div class="hero">
+      <div class="htag htag-t">Your strengths</div>
+      <div class="htitle">What can you help students with?</div>
+      <div class="hsub">Pick all that you genuinely feel confident supporting.</div>
+    </div>
+    <div class="bp">
+      <div class="field-label" style="margin-top:0;">Areas of support</div>
+      <div class="chip-group" id="m-support-chips">
+        <span class="chip chip-teal" onclick="tog(this)">Career guidance</span>
+        <span class="chip chip-teal" onclick="tog(this)">Self-doubt</span>
+        <span class="chip chip-teal" onclick="tog(this)">Focus &amp; habits</span>
+        <span class="chip chip-teal" onclick="tog(this)">Exam stress</span>
+        <span class="chip chip-teal" onclick="tog(this)">Tech careers</span>
+        <span class="chip chip-teal" onclick="tog(this)">Design</span>
+        <span class="chip chip-teal" onclick="tog(this)">Business</span>
+        <span class="chip chip-teal" onclick="tog(this)">Mental strength</span>
+        <span class="chip chip-teal" onclick="tog(this)">Study skills</span>
+        <span class="chip chip-teal" onclick="tog(this)">Job search</span>
+      </div>
+      <div class="field-label">Your story in one line</div>
+      <input class="field-input" id="m-story-in" type="text" placeholder="e.g. Was lost at 19 — found my path by 22"/>
+      <div class="info-box" style="margin-top:14px;">
+        <div class="info-text">Students pick mentors based on who they relate to — your story matters more than your title.</div>
+      </div>
+      <button class="cta cta-green" onclick="goScreen('page-m3')" style="margin-top:16px;">Continue ›</button>
+    </div>
+  </div>
+
+  <!-- MENTOR STEP 3 -->
+  <div class="screen" id="page-m3">
+    <div class="back-row" onclick="goBack('page-m2')"><span class="bch">‹</span><span class="blbl">Back</span></div>
+    <div class="ptrack" style="margin-top:10px;"><div class="pfill" style="width:60%;background:#1D9E75;"></div></div>
+    <div class="slabel">Step 3 of 5</div>
+    <div class="hero">
+      <div class="htag htag-t">Your time</div>
+      <div class="htitle">When are you usually free?</div>
+      <div class="hsub">Be honest — students count on your availability.</div>
+    </div>
+    <div class="bp">
+      <div class="field-label" style="margin-top:0;">Days available</div>
+      <div class="chip-group" id="m-days">
+        <span class="chip chip-teal" onclick="tog(this)">Mon</span>
+        <span class="chip chip-teal" onclick="tog(this)">Tue</span>
+        <span class="chip chip-teal" onclick="tog(this)">Wed</span>
+        <span class="chip chip-teal" onclick="tog(this)">Thu</span>
+        <span class="chip chip-teal" onclick="tog(this)">Fri</span>
+        <span class="chip chip-teal" onclick="tog(this)">Sat</span>
+        <span class="chip chip-teal" onclick="tog(this)">Sun</span>
+      </div>
+      <div class="field-label">Time of day</div>
+      <div class="avail-row" id="m-times">
+        <span class="avail-chip" onclick="togA(this)">Morning</span>
+        <span class="avail-chip" onclick="togA(this)">Afternoon</span>
+        <span class="avail-chip" onclick="togA(this)">Evening</span>
+      </div>
+      <div class="field-label">Hours per week</div>
+      <div class="chip-group" id="m-hours">
+        <span class="chip chip-teal" onclick="togSingle(this)">1 hr</span>
+        <span class="chip chip-teal" onclick="togSingle(this)">2 hrs</span>
+        <span class="chip chip-teal" onclick="togSingle(this)">3+ hrs</span>
+      </div>
+      <div class="field-label">Preferred connection</div>
+      <div class="chip-group" id="m-connection">
+        <span class="chip chip-teal" onclick="tog(this)">Chat / messages</span>
+        <span class="chip chip-teal" onclick="tog(this)">Video calls</span>
+        <span class="chip chip-teal" onclick="tog(this)">Both</span>
+      </div>
+      <button class="cta cta-green" onclick="goScreen('page-m4')" style="margin-top:16px;">Continue ›</button>
+    </div>
+  </div>
+
+  <!-- MENTOR STEP 4 -->
+  <div class="screen" id="page-m4">
+    <div class="back-row" onclick="goBack('page-m3')"><span class="bch">‹</span><span class="blbl">Back</span></div>
+    <div class="ptrack" style="margin-top:10px;"><div class="pfill" style="width:80%;background:#1D9E75;"></div></div>
+    <div class="slabel">Step 4 of 5</div>
+    <div class="hero">
+      <div class="htag htag-t">Your voice</div>
+      <div class="htitle">Write a short message to students</div>
+      <div class="hsub">This is the first thing they read on your profile. Be warm, be real.</div>
+    </div>
+    <div class="bp">
+      <div class="field-label" style="margin-top:0;">Your message (2–3 sentences)</div>
+      <textarea class="textarea" id="m-message-in" rows="4" placeholder="e.g. I was exactly where you are at 19 — no direction, full of self-doubt. A few good conversations changed everything for me. I'd love to be that person for you."></textarea>
+      <div class="field-label" style="margin-top:16px;">Profile preview</div>
+      <div class="surface">
+        <div class="rv-row"><span class="rv-label">Name</span><span class="rv-val" id="rv-name">—</span></div>
+        <div class="rv-row"><span class="rv-label">Role</span><span class="rv-val" id="rv-role">—</span></div>
+        <div class="rv-row"><span class="rv-label">Supports with</span><span class="rv-val" id="rv-supports">—</span></div>
+        <div class="rv-row"><span class="rv-label">Available</span><span class="rv-val" id="rv-available">—</span></div>
+        <div class="rv-row"><span class="rv-label">Connection</span><span class="rv-val" id="rv-connection">—</span></div>
+      </div>
+      <button class="cta cta-green" onclick="submitMentorProfile()" style="margin-top:16px;">Submit my profile ›</button>
+    </div>
+  </div>
+
+  <!-- MENTOR SUCCESS -->
+  <div class="screen" id="page-m5">
+    <div style="padding:36px 22px 16px;text-align:center;">
+      <div class="success-circle">✓</div>
+      <div style="font-size:20px;font-weight:700;color:#111;line-height:1.3;margin-bottom:8px;">You're in! Welcome to RisePath</div>
+      <div style="font-size:13px;color:#777;line-height:1.6;">Your profile is under review. We'll notify you within 24 hours once you're approved and matched.</div>
+    </div>
+    <div class="bp">
+      <div class="surface" style="margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:12px;">What happens next</div>
+        <div class="step-row"><div class="step-num step-num-t">1</div><div><div class="step-title">Profile review</div><div class="step-desc">We review for safety and fit — usually within 24 hrs.</div></div></div>
+        <div class="step-row"><div class="step-num step-num-t">2</div><div><div class="step-title">Short orientation</div><div class="step-desc">What to say, what not to, how to handle tough moments.</div></div></div>
+        <div class="step-row" style="margin-bottom:0;"><div class="step-num step-num-t">3</div><div><div class="step-title">First mentee matched</div><div class="step-desc">A student who fits your story is waiting for someone like you.</div></div></div>
+      </div>
+      <div class="info-box" style="margin-bottom:16px;">
+        <div class="info-text">Your first message from a student could arrive within 48 hours of approval.</div>
+      </div>
+      <button class="cta" onclick="goHome()">Back to home</button>
+    </div>
+  </div>
+
+
+  <!-- INTEREST / WAITLIST FORM -->
+  <div class="screen" id="page-interest">
+    <div class="back-row" onclick="goBack('page-landing')"><span class="bch">‹</span><span class="blbl">Back</span></div>
+    <div style="padding:22px 22px 10px;">
+      <div style="font-size:22px;font-weight:700;color:#111;line-height:1.3;margin-bottom:6px;">Stay in the loop 👋</div>
+      <div style="font-size:13px;color:#777;line-height:1.6;">RisePath is launching soon. Join the waitlist here and your details will go straight into the admin dashboard.</div>
+    </div>
+    <div class="bp" style="padding-top:14px;" id="interest-form-wrap">
+      <div class="surface" style="margin-bottom:12px;">
+        <div style="font-size:13px;color:#666;line-height:1.8;">This waitlist is now built into RisePath. No Google Form needed.</div>
+      </div>
+      <div class="field-label" style="margin-top:0;">Your name</div>
+      <input class="field-input" id="wl-name" type="text" placeholder="e.g. Arjun"/>
+      <div class="field-label">Email</div>
+      <input class="field-input" id="wl-email" type="email" placeholder="e.g. arjun@gmail.com"/>
+      <div class="field-label">WhatsApp number</div>
+      <input class="field-input" id="wl-phone" type="tel" placeholder="e.g. 98765 43210"/>
+      <div class="field-label">I am joining as</div>
+      <div class="chip-group" id="wl-role-group" style="margin-bottom:4px;">
+        <span class="chip" onclick="selectWaitlistRole(this)">Student (17–23)</span>
+        <span class="chip" onclick="selectWaitlistRole(this)">Mentor (24–30)</span>
+        <span class="chip" onclick="selectWaitlistRole(this)">Just curious</span>
+      </div>
+      <div class="info-box" style="margin-top:14px;margin-bottom:4px;">
+        <div class="info-text">We save this directly to your RisePath dashboard so you can follow up without switching tools.</div>
+      </div>
+      <button class="cta" onclick="submitInterest()" style="margin-top:14px;">Join the waitlist ›</button>
+      <button class="sec-btn" onclick="goBack('page-landing')">Back to RisePath</button>
+    </div>
+    <div id="interest-success" style="display:none;padding:16px 22px 24px;">
+      <div style="width:68px;height:68px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;">✓</div>
+      <div style="font-size:20px;font-weight:700;color:#111;margin-bottom:8px;text-align:center;">You’re on the list</div>
+      <div style="font-size:13px;color:#777;line-height:1.7;margin-bottom:16px;text-align:center;">Your waitlist signup is now stored directly inside RisePath. You can review it in the admin dashboard after deploy.</div>
+      <div class="info-box" style="margin-bottom:10px;">
+        <div class="info-text">What happens next: once RisePath goes live, you can contact this person directly from the admin dashboard.</div>
+      </div>
+      <button class="cta" onclick="goHome()">Back to home</button>
+    </div>
+  </div>
+
+</div><!-- end phone -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./risepath-config.js"></script>
+<script src="./risepath-data.js"></script>
+<script>
+// Clock
+function updateClock(){var n=new Date(),h=n.getHours(),m=n.getMinutes(),s=h>=12?'PM':'AM';h=h%12||12;document.getElementById('clock').textContent=h+':'+(m<10?'0':'')+m+' '+s;}
+updateClock();setInterval(updateClock,10000);
+
+var currentScreenId='page-landing';
+var navStack=[];
+var landingObserver=null;
+var _matchTimer=null;
+var q1sel=null,q2sel=null,q3sel=null;
+var currentStudentRequestId=null;
+var currentMentorApplicationId=null;
+var mentors={
+  career:{av:'PS',avbg:'#EEEDFE',avc:'#534AB7',name:'Priya Sharma',role:'UX Designer · 27 · Hyderabad',tags:[['Career guidance','bt'],['Self-doubt','bp'],['Chat+Video','bb']],quote:'"I was exactly where you are at 19 — no direction, full of self-doubt. A few good conversations changed everything. I\'d love to be that person for you."',why:'You said you\'re struggling with career confusion. Priya felt the same at your age and found her path by 22. She specialises in helping students find direction without pressure.'},
+  doubt:{av:'NK',avbg:'#E1F5EE',avc:'#0F6E56',name:'Nisha Krishnan',role:'MBA Student · 26 · Chennai',tags:[['Self-doubt','bt'],['Study habits','bt'],['Goals','bp']],quote:'"Comparison is the thief of joy — I spent two years comparing myself to everyone. I learned to stop, and I want to help you do the same, faster."',why:'You said self-doubt is your biggest challenge. Nisha went through the same spiral and built real confidence through small daily wins.'},
+  focus:{av:'RM',avbg:'#FAECE7',avc:'#993C1D',name:'Rohan Mehta',role:'Software Engineer · 29 · Bengaluru',tags:[['Focus & habits','bc'],['Mental strength','bc'],['Tech','bt']],quote:'"I lost a whole year to distraction. I know exactly what it takes to break that cycle — not willpower, but systems. I\'ll share what actually worked."',why:'You said focus is your struggle. Rohan cracked his dream job only after learning to manage distraction — he\'ll share the exact habits that changed things for him.'},
+  pressure:{av:'PS',avbg:'#EEEDFE',avc:'#534AB7',name:'Priya Sharma',role:'UX Designer · 27 · Hyderabad',tags:[['Pressure & stress','bp'],['Career','bt'],['Chat+Video','bb']],quote:'"Family pressure, exam stress, future anxiety — I carried all of it at once. You don\'t have to. Let\'s talk through what\'s actually weighing on you."',why:'You said you\'re under a lot of pressure. Priya managed family expectations and exam stress while finding her own path — she understands how that feels.'}
+};
+var labelMaps={
+  q1:{career:'Career confusion',doubt:'Self-doubt',focus:'Focus and distraction',pressure:'Pressure and overwhelm'},
+  q2:{talk:'Someone to talk to',plan:'A clear plan',story:'Real stories',check:'Regular check-ins'},
+  q3:{chat:'Chat only',video:'Video calls',both:'Chat first, video later'}
+};
+
+function byId(id){return document.getElementById(id);}
+function uid(prefix){return prefix+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);}
+function esc(str){return String(str||'').replace(/[&<>"']/g,function(ch){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
+function appStore(){return window.RisePathStore||null;}
+function formatStamp(ts){var d=new Date(ts);return d.toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});}
+function sortByLatest(items){return items.slice().sort(function(a,b){return new Date(b.updatedAt||b.createdAt)-new Date(a.updatedAt||a.createdAt);});}
+function getSelectedTexts(rootId,selector){var root=byId(rootId);if(!root)return[];return Array.from(root.querySelectorAll(selector)).map(function(el){return el.textContent.trim();});}
+
+function updateLandingDots(idx){document.querySelectorAll('.landing-dot').forEach(function(dot,i){dot.classList.toggle('active',i===idx);});}
+function updateLandingFromScroll(){var flow=byId('landing-flow');if(!flow)return;var panels=flow.querySelectorAll('.landing-panel');var best=0;var bestDist=Infinity;panels.forEach(function(panel,i){var dist=Math.abs(panel.offsetTop-flow.scrollTop);if(dist<bestDist){bestDist=dist;best=i;}});updateLandingDots(best);}
+function jumpLanding(idx){var flow=byId('landing-flow');var panels=flow?flow.querySelectorAll('.landing-panel'):[];if(!panels[idx])return;panels[idx].scrollIntoView({behavior:'smooth',block:'start'});}
+function setupLandingMotion(){
+  var flow=byId('landing-flow');
+  if(!flow||landingObserver)return;
+  var panels=flow.querySelectorAll('.landing-panel');
+  landingObserver=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('revealed');
+        updateLandingDots(parseInt(entry.target.dataset.landingIndex||'0',10));
+      }
+    });
+  },{root:flow,threshold:0.6});
+  panels.forEach(function(panel){landingObserver.observe(panel);});
+  flow.addEventListener('scroll',function(){requestAnimationFrame(updateLandingFromScroll);},{passive:true});
+  if(panels[0])panels[0].classList.add('revealed');
+  updateLandingDots(0);
+}
+
+function collectMotionTargets(screen){
+  if(!screen||screen.id==='page-landing')return[];
+  var seen=new Set();
+  var targets=[];
+  function add(el){
+    if(!el||seen.has(el))return;
+    seen.add(el);
+    targets.push(el);
+  }
+  Array.from(screen.children).forEach(function(child){
+    if(child.classList.contains('hero')||child.classList.contains('bp')||child.id==='interest-form-wrap'||child.id==='admin-scroll'||child.hasAttribute('data-preserve-scroll')){
+      Array.from(child.children).forEach(function(grand){
+        if(grand.classList&&grand.classList.contains('admin-metrics')){
+          Array.from(grand.children).forEach(add);
+        }else{
+          add(grand);
+        }
+      });
+    }else{
+      add(child);
+    }
+  });
+  return targets;
+}
+function playScreenMotion(screen){
+  if(!screen||screen.id==='page-landing')return;
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var targets=collectMotionTargets(screen);
+  screen.querySelectorAll('.screen-anim').forEach(function(el){
+    el.classList.remove('screen-anim','motion-in');
+    el.style.removeProperty('--motion-delay');
+  });
+  targets.forEach(function(el,i){
+    el.classList.add('screen-anim');
+    el.style.setProperty('--motion-delay',(i*0.045)+'s');
+  });
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      targets.forEach(function(el){el.classList.add('motion-in');});
+    });
+  });
+}
+
+function captureState(id){
+  var state={id:id,scrolls:{}};
+  var screen=byId(id);
+  if(!screen)return state;
+  screen.querySelectorAll('[data-preserve-scroll]').forEach(function(el){
+    state.scrolls[el.getAttribute('data-preserve-scroll')]=el.scrollTop;
+  });
+  return state;
+}
+function restoreState(state){
+  activateScreen(state.id);
+  requestAnimationFrame(function(){
+    Object.keys(state.scrolls||{}).forEach(function(key){
+      var el=document.querySelector('[data-preserve-scroll="'+key+'"]');
+      if(el)el.scrollTop=state.scrolls[key];
+    });
+    if(state.id==='page-landing')updateLandingFromScroll();
+  });
+}
+function activateScreen(id){
+  clearTimeout(_matchTimer);
+  document.querySelectorAll('.screen').forEach(function(screen){screen.classList.remove('active');});
+  var target=byId(id);
+  if(!target)return;
+  target.classList.add('active');
+  currentScreenId=id;
+  if(id!=='page-landing')window.scrollTo(0,0);
+  if(id==='page-interest')resetWaitlistFlow();
+  playScreenMotion(target);
+  if(id==='page-matching')startMatchAnimation();
+}
+function goScreen(id,opts){
+  opts=opts||{};
+  if(currentScreenId&&id!==currentScreenId&&!opts.skipHistory){
+    navStack.push(captureState(currentScreenId));
+  }
+  activateScreen(id);
+  if(id==='page-landing')requestAnimationFrame(updateLandingFromScroll);
+}
+function goBack(fallbackId){
+  if(navStack.length){
+    restoreState(navStack.pop());
+    return;
+  }
+  if(fallbackId){
+    if(fallbackId==='page-landing'){
+      goHome();
+    }else{
+      activateScreen(fallbackId);
+    }
+  }
+}
+function goHome(){
+  navStack=[];
+  activateScreen('page-landing');
+  requestAnimationFrame(function(){
+    var flow=byId('landing-flow');
+    if(flow)flow.scrollTop=0;
+    updateLandingDots(0);
+  });
+}
+function goDetail(id){var map={distraction:'page-distraction',career:'page-career',morale:'page-morale'};goScreen(map[id]);}
+
+function resetQuizButtons(){
+  [['q1-btn','Continue ›'],['q2-btn','Continue ›'],['q3-btn','Find my mentor ›']].forEach(function(pair){
+    var btn=byId(pair[0]);
+    if(btn){btn.className='cta-dim';btn.textContent=pair[1];}
+  });
+  document.querySelectorAll('#page-q1 .opt,#page-q2 .opt,#page-q3 .opt').forEach(function(opt){opt.classList.remove('sel');});
+}
+function beginStudentFlow(){
+  currentStudentRequestId=null;
+  q1sel=null;q2sel=null;q3sel=null;
+  if(byId('uname'))byId('uname').value='';
+  resetQuizButtons();
+  goScreen('page-quiz-welcome');
+}
+
+function readMentorDraft(){
+  var supports=getSelectedTexts('m-support-chips','.chip.sel');
+  var days=getSelectedTexts('m-days','.chip.sel');
+  var times=getSelectedTexts('m-times','.avail-chip.sel');
+  var hours=getSelectedTexts('m-hours','.chip.sel');
+  var connection=getSelectedTexts('m-connection','.chip.sel');
+  return{
+    name:(byId('m-name-in').value||'').trim(),
+    age:(byId('m-age-in').value||'').trim(),
+    city:(byId('m-city-in').value||'').trim(),
+    role:(byId('m-role-in').value||'').trim(),
+    story:(byId('m-story-in').value||'').trim(),
+    supports:supports,
+    days:days,
+    times:times,
+    hours:hours,
+    connection:connection,
+    message:(byId('m-message-in').value||'').trim()
+  };
+}
+function updateMentorPreview(){
+  var draft=readMentorDraft();
+  byId('rv-name').textContent=draft.name||'—';
+  byId('rv-role').textContent=draft.role||'—';
+  byId('rv-supports').textContent=draft.supports.length?draft.supports.slice(0,3).join(', '):'—';
+  var availableParts=[];
+  if(draft.times.length)availableParts.push(draft.times.join('/'));
+  if(draft.hours[0])availableParts.push(draft.hours[0]);
+  byId('rv-available').textContent=availableParts.length?availableParts.join(' · '):'—';
+  byId('rv-connection').textContent=draft.connection.length?draft.connection.join(' + '):'—';
+}
+function resetMentorFlow(){
+  currentMentorApplicationId=null;
+  ['m-name-in','m-age-in','m-city-in','m-role-in','m-story-in','m-message-in'].forEach(function(id){if(byId(id))byId(id).value='';});
+  document.querySelectorAll('#page-m1 .chip.sel,#page-m2 .chip.sel,#page-m3 .chip.sel,#page-m3 .avail-chip.sel').forEach(function(el){el.classList.remove('sel');});
+  if(byId('av-init'))byId('av-init').textContent='+';
+  if(byId('av-sub'))byId('av-sub').textContent='Add photo';
+  updateMentorPreview();
+}
+function beginMentorFlow(){resetMentorFlow();goScreen('page-m1');}
+function selectWaitlistRole(el){var group=byId('wl-role-group');if(!group)return;group.querySelectorAll('.chip').forEach(function(chip){chip.classList.remove('sel');});el.classList.add('sel');}
+function resetWaitlistFlow(){
+  ['wl-name','wl-email','wl-phone'].forEach(function(id){if(byId(id))byId(id).value='';});
+  var group=byId('wl-role-group');
+  if(group)group.querySelectorAll('.chip').forEach(function(chip){chip.classList.remove('sel');});
+  if(byId('interest-form-wrap'))byId('interest-form-wrap').style.display='block';
+  if(byId('interest-success'))byId('interest-success').style.display='none';
+}
+
+function pickQ1(el,val){document.querySelectorAll('#page-q1 .opt').forEach(function(o){o.classList.remove('sel');});el.classList.add('sel');q1sel=val;var b=byId('q1-btn');b.className='cta';b.textContent='Continue ›';}
+function pickQ2(el,val){document.querySelectorAll('#page-q2 .opt').forEach(function(o){o.classList.remove('sel');});el.classList.add('sel');q2sel=val;var b=byId('q2-btn');b.className='cta';b.textContent='Continue ›';}
+function pickQ3(el,val){document.querySelectorAll('#page-q3 .opt').forEach(function(o){o.classList.remove('sel');});el.classList.add('sel');q3sel=val;var b=byId('q3-btn');b.className='cta';b.textContent='Find my mentor ›';}
+
+async function upsertStudentRequest(match){
+  var now=new Date().toISOString();
+  var request={
+    id:currentStudentRequestId||uid('student'),
+    name:(byId('uname').value||'Student').trim()||'Student',
+    struggle:labelMaps.q1[q1sel]||'Not set',
+    support:labelMaps.q2[q2sel]||'Not set',
+    connection:labelMaps.q3[q3sel]||'Not set',
+    matchedMentor:match.name,
+    matchedRole:match.role,
+    status:'Matched',
+    createdAt:now,
+    updatedAt:now
+  };
+  currentStudentRequestId=request.id;
+  if(appStore())await appStore().saveStudentRequest(request);
+}
+async function updateStudentRequest(patch){
+  if(!currentStudentRequestId)return;
+  var request=Object.assign({
+    id:currentStudentRequestId,
+    name:(byId('uname').value||'Student').trim()||'Student',
+    struggle:labelMaps.q1[q1sel]||'Not set',
+    support:labelMaps.q2[q2sel]||'Not set',
+    connection:labelMaps.q3[q3sel]||'Not set',
+    matchedMentor:byId('m-name').textContent||'',
+    matchedRole:byId('m-role').textContent||'',
+    status:'Matched',
+    createdAt:new Date().toISOString(),
+    updatedAt:new Date().toISOString()
+  },patch,{updatedAt:new Date().toISOString()});
+  if(appStore())await appStore().saveStudentRequest(request);
+}
+
+async function buildMatch(){
+  var key=q1sel||'career';
+  var m=mentors[key];
+  var uname=(byId('uname').value||'there').trim()||'there';
+  byId('match-greeting').textContent='Hi '+uname+', meet your mentor —';
+  byId('m-av').textContent=m.av;
+  byId('m-av').style.background=m.avbg;
+  byId('m-av').style.color=m.avc;
+  byId('m-name').textContent=m.name;
+  byId('m-role').textContent=m.role;
+  byId('m-quote').textContent=m.quote;
+  byId('why-text').textContent=m.why;
+  var tagRow=byId('m-tags');
+  tagRow.innerHTML='';
+  m.tags.forEach(function(t){var s=document.createElement('span');s.className='badge '+t[1];s.textContent=t[0];tagRow.appendChild(s);});
+  byId('fc-av').textContent=m.av;
+  byId('fc-av').style.background=m.avbg;
+  byId('fc-av').style.color=m.avc;
+  byId('fc-name').textContent=m.name;
+  if(byId('dash-name'))byId('dash-name').textContent=uname.charAt(0).toUpperCase()+uname.slice(1);
+  await upsertStudentRequest(m);
+}
+function startMatchAnimation(){
+  ['ch1','ch2','ch3'].forEach(function(c){
+    byId(c+'-icon').textContent='○';
+    byId(c+'-icon').style.color='#ccc';
+  });
+  ['ch1','ch2','ch3'].forEach(function(c,i){
+    setTimeout(function(){byId(c+'-icon').textContent='✓';byId(c+'-icon').style.color='#7F77DD';},800*(i+1));
+  });
+  _matchTimer=setTimeout(function(){buildMatch();goScreen('page-match-result',{skipHistory:true});},3200);
+}
+
+function sendFirst(){
+  var inp=byId('first-msg');
+  var txt=inp.value.trim();
+  if(!txt)return;
+  var msgs=byId('chat-msgs');
+  var d=document.createElement('div');
+  d.className='msg me';
+  d.innerHTML='<div class="bubble bubble-me">'+esc(txt)+'</div><div class="msg-time">Just now</div>';
+  msgs.appendChild(d);
+  inp.value='';
+  msgs.scrollTop=msgs.scrollHeight;
+  updateStudentRequest({status:'Started chat',firstMessage:txt});
+  setTimeout(function(){
+    var r=document.createElement('div');
+    r.className='msg them';
+    r.innerHTML="<div class=\"bubble bubble-them\">That's a great starting point — let's explore this together in our first call. I'm here for you.</div><div class=\"msg-time\">Just now</div>";
+    msgs.appendChild(r);
+    msgs.scrollTop=msgs.scrollHeight;
+  },1200);
+}
+
+function tog(el){el.classList.toggle('sel');updateMentorPreview();}
+function togA(el){el.classList.toggle('sel');updateMentorPreview();}
+function togSingle(el){el.closest('.chip-group').querySelectorAll('.chip').forEach(function(c){c.classList.remove('sel');});el.classList.add('sel');updateMentorPreview();}
+function submitMood(){byId('mood-confirm').style.display='block';}
+function animateAv(){byId('av-init').textContent='PS';byId('av-sub').textContent='Added ✓';}
+
+async function submitMentorProfile(){
+  var draft=readMentorDraft();
+  if(!draft.name||!draft.age||!draft.city||!draft.role){alert('Please complete your name, age, city, and current role.');goScreen('page-m1');return;}
+  if(!draft.supports.length||!draft.story){alert('Please select your support areas and write your one-line story.');goScreen('page-m2');return;}
+  if(!draft.days.length||!draft.times.length||!draft.hours.length||!draft.connection.length){alert('Please complete your availability and preferred connection style.');goScreen('page-m3');return;}
+  if(!draft.message){alert('Please add a short message to students before submitting.');goScreen('page-m4');return;}
+  var now=new Date().toISOString();
+  var record={
+    id:currentMentorApplicationId||uid('mentor'),
+    name:draft.name,
+    age:draft.age,
+    city:draft.city,
+    role:draft.role,
+    story:draft.story,
+    supports:draft.supports,
+    days:draft.days,
+    times:draft.times,
+    hours:draft.hours[0]||'',
+    connection:draft.connection,
+    message:draft.message,
+    status:'Pending review',
+    createdAt:now,
+    updatedAt:now
+  };
+  currentMentorApplicationId=record.id;
+  if(appStore())await appStore().saveMentorApplication(record);
+  goScreen('page-m5');
+}
+
+async function submitInterest(source){
+  var name=(byId('wl-name').value||'').trim();
+  var email=(byId('wl-email').value||'').trim();
+  var phone=(byId('wl-phone').value||'').trim();
+  var roleEl=document.querySelector('#wl-role-group .chip.sel');
+  var role=roleEl?roleEl.textContent.trim():'';
+  if(!name||!email||!role){alert('Please enter your name, email, and role before joining the waitlist.');return;}
+  if(appStore())await appStore().saveWaitlistSignup({
+    id:uid('waitlist'),
+    name:name,
+    email:email,
+    phone:phone,
+    role:role,
+    source:source||currentScreenId,
+    status:'Interested',
+    createdAt:new Date().toISOString(),
+    updatedAt:new Date().toISOString()
+  });
+  if(byId('interest-form-wrap'))byId('interest-form-wrap').style.display='none';
+  if(byId('interest-success'))byId('interest-success').style.display='block';
+}
+
+document.addEventListener('input',function(e){
+  if(['m-name-in','m-age-in','m-city-in','m-role-in','m-story-in','m-message-in'].includes(e.target.id))updateMentorPreview();
+});
+
+setupLandingMotion();
+updateMentorPreview();
+resetWaitlistFlow();
+</script>
+</body>
+</html>

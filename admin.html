@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RisePath Admin</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(180deg,#f5efe5 0%,#eef5ff 100%);color:#111;min-height:100vh;}
+  .wrap{max-width:980px;margin:0 auto;padding:24px 16px 40px;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;}
+  .brand{font-size:24px;font-weight:800;letter-spacing:-0.04em;color:#534AB7;}
+  .top-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .pill{border:none;border-radius:999px;padding:11px 16px;background:#fff;color:#534AB7;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 12px 28px rgba(83,74,183,0.10);}
+  .pill.secondary{color:#0F6E56;}
+  .hero{background:rgba(255,255,255,0.84);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.7);border-radius:26px;padding:22px 20px;box-shadow:0 18px 48px rgba(17,17,17,0.08);margin-bottom:16px;}
+  .eyebrow{font-size:11px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#7C7399;margin-bottom:8px;}
+  .title{font-size:30px;font-weight:800;line-height:1.05;letter-spacing:-0.04em;}
+  .sub{font-size:14px;color:#666;line-height:1.7;margin-top:10px;max-width:680px;}
+  .banner{margin-top:14px;padding:13px 14px;border-radius:16px;font-size:13px;line-height:1.7;}
+  .banner.info{background:#E6F1FB;color:#185FA5;}
+  .banner.warn{background:#FFF3E5;color:#9A5712;}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+  .metric{background:#fff;border:1px solid #eee;border-radius:18px;padding:16px 14px;box-shadow:0 12px 28px rgba(17,17,17,0.05);}
+  .metric-val{font-size:28px;font-weight:800;line-height:1;}
+  .metric-lbl{font-size:12px;color:#888;line-height:1.5;margin-top:6px;}
+  .panel{background:#fff;border:1px solid #eee;border-radius:22px;padding:18px;box-shadow:0 14px 32px rgba(17,17,17,0.06);margin-bottom:14px;}
+  .panel-title{font-size:17px;font-weight:800;}
+  .panel-copy{font-size:12px;color:#888;line-height:1.7;margin-top:4px;margin-bottom:12px;}
+  .list{display:flex;flex-direction:column;gap:10px;}
+  .item{border:1.5px solid #eee;border-radius:16px;padding:14px;}
+  .item-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .item-name{font-size:14px;font-weight:700;color:#111;}
+  .item-meta{font-size:11px;color:#999;line-height:1.5;margin-top:4px;}
+  .item-copy{font-size:12px;color:#666;line-height:1.7;margin-top:10px;}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+  .badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;}
+  .bp{background:#EEEDFE;color:#534AB7;}
+  .bt{background:#E1F5EE;color:#0F6E56;}
+  .bc{background:#FAECE7;color:#993C1D;}
+  .bb{background:#E6F1FB;color:#185FA5;}
+  .empty{padding:16px;border-radius:16px;background:#f7f6f3;color:#888;font-size:12px;line-height:1.7;}
+  .gate{max-width:560px;margin:52px auto 0;}
+  .gate-card{background:#fff;border:1px solid #eee;border-radius:24px;padding:22px;box-shadow:0 18px 44px rgba(17,17,17,0.08);}
+  .gate-title{font-size:24px;font-weight:800;line-height:1.1;letter-spacing:-0.03em;}
+  .gate-copy{font-size:14px;color:#666;line-height:1.7;margin-top:10px;}
+  .input-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+  .input{flex:1;min-width:240px;padding:12px 14px;border:1.5px solid #e0e0e0;border-radius:14px;font-size:14px;background:#fafafa;}
+  .cta{border:none;border-radius:14px;padding:13px 16px;background:#534AB7;color:#fff;font-size:14px;font-weight:700;cursor:pointer;}
+  .note{font-size:12px;color:#999;line-height:1.7;margin-top:12px;}
+  .hidden{display:none;}
+  @media(max-width:760px){
+    .grid{grid-template-columns:1fr;}
+    .title{font-size:26px;}
+    .topbar{align-items:flex-start;flex-direction:column;}
+    .top-actions{width:100%;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">RisePath Admin</div>
+    <div class="top-actions">
+      <button class="pill secondary" onclick="window.location.href='./risepath.html'">Open Public Flow</button>
+      <button class="pill hidden" id="refresh-btn">Refresh</button>
+      <button class="pill hidden" id="signout-btn">Sign out</button>
+    </div>
+  </div>
+
+  <div class="gate" id="gate-view">
+    <div class="gate-card">
+      <div class="eyebrow">Private Dashboard</div>
+      <div class="gate-title">Only the owner email can open this dashboard.</div>
+      <div class="gate-copy">Access is restricted to <strong id="admin-email-text">deepdive9999@gmail.com</strong>. Once Supabase is configured, a secure magic link can be sent to that inbox.</div>
+      <div class="banner warn hidden" id="setup-banner"></div>
+      <div class="banner info hidden" id="status-banner"></div>
+      <div class="input-row">
+        <input class="input" id="admin-email-input" type="email" readonly value="deepdive9999@gmail.com"/>
+        <button class="cta" id="login-btn">Send Secure Login Link</button>
+      </div>
+      <div class="note">This page is separate from the public site. When deployed, all public submissions flow into the shared database and appear here.</div>
+    </div>
+  </div>
+
+  <div class="hidden" id="dashboard-view">
+    <div class="hero">
+      <div class="eyebrow">Shared Submission Flow</div>
+      <div class="title">Mentor applications, student requests, and waitlist signups in one view.</div>
+      <div class="sub" id="mode-copy">Loading dashboard data...</div>
+    </div>
+    <div class="grid" id="metrics"></div>
+    <div class="panel">
+      <div class="panel-title">Students Looking For Mentors</div>
+      <div class="panel-copy">Created when a student finishes the mentor match flow.</div>
+      <div class="list" id="students-list"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Mentor Applications</div>
+      <div class="panel-copy">Created when a mentor submits the 4-step profile flow.</div>
+      <div class="list" id="mentors-list"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Waitlist Signups</div>
+      <div class="panel-copy">People who joined directly through the RisePath waitlist form.</div>
+      <div class="list" id="waitlist-list"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./risepath-config.js"></script>
+<script src="./risepath-data.js"></script>
+<script>
+  function byId(id){return document.getElementById(id);}
+  function esc(str){return String(str||'').replace(/[&<>"']/g,function(ch){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
+  function formatStamp(ts){var d=new Date(ts);return d.toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});}
+
+  var store = window.RisePathStore;
+  var adminEmail = store ? store.adminEmail : 'deepdive9999@gmail.com';
+  byId('admin-email-text').textContent = adminEmail;
+  byId('admin-email-input').value = adminEmail;
+
+  function show(id){byId(id).classList.remove('hidden');}
+  function hide(id){byId(id).classList.add('hidden');}
+
+  function metric(val,label){
+    return '<div class="metric"><div class="metric-val">'+esc(val)+'</div><div class="metric-lbl">'+esc(label)+'</div></div>';
+  }
+
+  function renderStudent(item){
+    return '<div class="item"><div class="item-top"><div><div class="item-name">'+esc(item.name)+'</div><div class="item-meta">'+esc(formatStamp(item.updatedAt||item.createdAt))+'</div></div><span class="badge bp">'+esc(item.status)+'</span></div><div class="tags"><span class="badge bt">'+esc(item.struggle)+'</span><span class="badge bb">'+esc(item.support)+'</span><span class="badge bc">'+esc(item.connection)+'</span></div><div class="item-copy">Matched with '+esc(item.matchedMentor)+' · '+esc(item.matchedRole)+(item.firstMessage?' · First message: "'+esc(item.firstMessage)+'"':'')+'</div></div>';
+  }
+
+  function renderMentor(item){
+    return '<div class="item"><div class="item-top"><div><div class="item-name">'+esc(item.name)+' · '+esc(item.age)+'</div><div class="item-meta">'+esc(item.city)+' · '+esc(item.role)+' · '+esc(formatStamp(item.updatedAt||item.createdAt))+'</div></div><span class="badge bt">'+esc(item.status)+'</span></div><div class="tags">'+(item.supports||[]).map(function(tag){return '<span class="badge bb">'+esc(tag)+'</span>';}).join('')+'</div><div class="item-copy">'+esc(item.story)+' · '+esc((item.times||[]).join('/'))+' · '+esc(item.hours)+' · '+esc((item.connection||[]).join(' + '))+'</div></div>';
+  }
+
+  function renderWaitlist(item){
+    return '<div class="item"><div class="item-top"><div><div class="item-name">'+esc(item.name)+'</div><div class="item-meta">'+esc(formatStamp(item.createdAt))+' · '+esc(item.role)+'</div></div><span class="badge bc">'+esc(item.status)+'</span></div><div class="tags"><span class="badge bb">'+esc(item.email)+'</span>'+(item.phone?'<span class="badge bt">'+esc(item.phone)+'</span>':'')+'</div><div class="item-copy">Source: '+esc(item.source)+'</div></div>';
+  }
+
+  function renderList(targetId, items, renderer, emptyText){
+    byId(targetId).innerHTML = items.length ? items.map(renderer).join('') : '<div class="empty">'+esc(emptyText)+'</div>';
+  }
+
+  async function renderDashboard(){
+    var data = await store.listDashboardData();
+    byId('mode-copy').textContent = data.mode === 'cloud'
+      ? 'Live cloud mode is active. Submissions from the public site will appear here once users submit them online.'
+      : 'Local preview mode is active. Add Supabase credentials in risepath-config.js to make this shared across the internet.';
+    byId('metrics').innerHTML =
+      metric(data.students.length,'Student requests') +
+      metric(data.mentors.length,'Mentor applications') +
+      metric(data.waitlist.length,'Waitlist signups');
+    renderList('students-list', data.students, renderStudent, 'No student requests yet.');
+    renderList('mentors-list', data.mentors, renderMentor, 'No mentor applications yet.');
+    renderList('waitlist-list', data.waitlist, renderWaitlist, 'No waitlist signups yet.');
+  }
+
+  async function authorize(){
+    if (!store) return;
+
+    if (!store.cloudReady()) {
+      show('gate-view');
+      hide('dashboard-view');
+      show('setup-banner');
+      byId('setup-banner').textContent = 'Setup still needed: add your Supabase URL and anon key in risepath-config.js, then create the tables from supabase-schema.sql.';
+      byId('login-btn').textContent = 'Cloud Setup Needed';
+      byId('login-btn').disabled = true;
+      await renderDashboard();
+      show('dashboard-view');
+      return;
+    }
+
+    var session = await store.getAdminSession();
+    if (!session || !session.user) {
+      show('gate-view');
+      hide('dashboard-view');
+      show('status-banner');
+      byId('status-banner').textContent = 'No admin session yet. Send the magic link to your admin email to continue.';
+      return;
+    }
+
+    var email = (session.user.email || '').toLowerCase();
+    if (email !== adminEmail.toLowerCase()) {
+      await store.signOutAdmin();
+      show('gate-view');
+      hide('dashboard-view');
+      show('status-banner');
+      byId('status-banner').textContent = 'This dashboard only allows '+adminEmail+'. The current session has been signed out.';
+      return;
+    }
+
+    hide('gate-view');
+    show('dashboard-view');
+    show('refresh-btn');
+    show('signout-btn');
+    await renderDashboard();
+  }
+
+  byId('login-btn').addEventListener('click', async function(){
+    if (!store || !store.cloudReady()) return;
+    var result = await store.requestAdminMagicLink(adminEmail, window.location.href.split('#')[0]);
+    show('status-banner');
+    byId('status-banner').textContent = result.ok
+      ? 'Magic link sent to '+adminEmail+'. Open the email on this device and come back here.'
+      : result.error;
+  });
+
+  byId('refresh-btn').addEventListener('click', function(){ renderDashboard(); });
+  byId('signout-btn').addEventListener('click', async function(){
+    await store.signOutAdmin();
+    hide('refresh-btn');
+    hide('signout-btn');
+    authorize();
+  });
+
+  authorize();
+</script>
+</body>
+</html>
