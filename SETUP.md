@@ -2,7 +2,7 @@
 
 These files are now split into:
 
-- `risepath.html`: public mobile flow
+- `index.html`: public mobile flow
 - `admin.html`: private dashboard for `deepdive9999@gmail.com`
 - `risepath-config.js`: deployment config
 - `risepath-data.js`: shared storage/auth layer
@@ -46,5 +46,5 @@ This version writes directly from the public frontend to Supabase using the anon
 
 If Supabase is not configured yet:
 
-- `risepath.html` still works as a prototype
+- `index.html` still works as a prototype
 - `admin.html` shows setup guidance and can display local preview data
